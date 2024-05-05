@@ -40,15 +40,15 @@ OscilCondTaskParams<Type> inputTaskParams(const string& nameFile) {
     //Начальное расположение каждой точки
     if (initCondType == 1) {
         taskParams.initCond = [](Type x) {return sin(pi * x); };
-        taskParams.DDinitCond = [](Type x) {return pi * cos(pi * x); };
+        taskParams.DDinitCond = [](Type x) {return pi * pi * ( - sin(pi * x)); };
     }
     else if (initCondType == 2) {
         taskParams.initCond = [](Type x) {return x * (1 - x); };
-        taskParams.DDinitCond = [](Type x) {return 1 - 2 * x; };
+        taskParams.DDinitCond = [](Type x) {return - 2.; };
     }
     else if (initCondType == 3) {
         taskParams.initCond = [](Type x) {return 2 * x * (x + 1) + 0.3; };
-        taskParams.DDinitCond = [](Type x) {return 4 * x + 2; };
+        taskParams.DDinitCond = [](Type x) {return 4.; };
     }
 
     //Начальная скорость каждой точки
