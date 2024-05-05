@@ -19,12 +19,14 @@ struct OscilCondTaskParams {
 	Type rho;
 
 	OscilCondBorderFunc<Type> initCond;
+
+	bool DDinitCondType;
 	OscilCondBorderFunc<Type> DDinitCond;
 
 	OscilCondBorderFunc<Type> initCondSpeed;
 
-	OscilCondBorderFunc<Type> leftBorderType;
-	OscilCondBorderFunc<Type> rightBorseType;
+	OscilCondBorderFunc<Type> leftCond;
+	OscilCondBorderFunc<Type> rightCond;
 
 	Type a;
 };
@@ -74,10 +76,20 @@ void oscilStringCheme(const OscilCondTaskParams<T>& taskParams, const OscilCondM
 	}
 	outFile << endl;
 
-	for (int i = 0; i < N + 1; ++i) { // начальное условие скоростей каждой точки струны
-		cur_y[i] = prev_y[i] + tau * tau * taskParams.initCondSpeed(x[i]) + (a * a * tau * tau) / 2 * taskParams.DDinitCond(x[i]);
+	
+	if (taskParams.DDinitCondType == true) {
+		for (int i = 0; i < N + 1; ++i) { // начальное условие скоростей каждой точки струны
+			cur_y[i] = prev_y[i] + tau * tau * taskParams.initCondSpeed(x[i]) + (a * a * tau * tau) / 2 * taskParams.DDinitCond(x[i]);
+		}
 	}
-
+	else if (taskParams.DDinitCondType == false) {
+		for (int i = 1; i < N; ++i) { // начальное условие скоростей каждой точки струны
+			cur_y[i] = prev_y[i] + tau * tau * taskParams.initCondSpeed(x[i]) + (a * a * tau * tau) / (2 * h * h) * (taskParams.initCond(x[i + 1]) - 2 * taskParams.initCond(x[i]) + taskParams.initCond(x[i - 1]));
+		}
+		cur_y[0] = prev_y[0] + tau * tau * taskParams.initCondSpeed(x[0]) + (a * a * tau * tau) / (2 * h * h) * (taskParams.initCond(x[1]) - 2 * taskParams.initCond(x[0]) + taskParams.initCond(x[0] - h));
+		cur_y[N] = prev_y[N] + tau * tau * taskParams.initCondSpeed(x[N]) + (a * a * tau * tau) / (2 * h * h) * (taskParams.initCond(x[N] + h) - 2 * taskParams.initCond(x[N]) + taskParams.initCond(x[N - 1]));
+	}
+	
 	for (int i = 0; i < N + 1; ++i) { // вывод в файл первого временного слоя
 		outFile << cur_y[i] << " ";
 	}

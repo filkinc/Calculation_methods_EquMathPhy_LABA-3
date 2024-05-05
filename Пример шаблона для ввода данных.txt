@@ -1,0 +1,15 @@
+file_task_params.txt
+L
+T
+rho
+a
+initCondType			// 1 - sin(pi * x) ; 2 - x * (1 - x) ; 3 - 2 * x * (x + 1) + 0.3
+DDinitCondType			// true - exact ; false - approximate
+initCondSpeedType		// 1 - 0. ; 2 - 2 * sin(x)  
+leftCondType			// 1 - 0. ; 2 - 0.3
+rightCondType			// 1 - 0. ; 2 - 4.3 + t
+
+
+tile_method_params.txt
+n				// x
+m				// t
